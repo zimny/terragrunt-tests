@@ -9,6 +9,9 @@ env:
   TG_DOWNLOAD_DIR: '/tmp'
   TERRAGRUNT_DOWNLOAD: '/tmp'
 
+permissions:
+  pull-requests: write
+
 jobs:
   checks:
     runs-on: ubuntu-latest
@@ -40,6 +43,7 @@ jobs:
           tg_dir: ${{ env.working_dir }}
           tg_command: 'plan -out /github/workspace/terragrunt.tfplan'
           tg_comment: 1
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4.6.2
