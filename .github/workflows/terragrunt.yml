@@ -29,6 +29,9 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@main
 
+      - name: Create Plan Directory
+        run: mkdir -p ${{ github.workspace }}
+
       - name: Generate Plan
         id: terragrunt-plan
         uses: gruntwork-io/terragrunt-action@v2
