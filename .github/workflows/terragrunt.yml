@@ -38,22 +38,23 @@ jobs:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
-          tg_command: 'plan -out=/tmp/plan.out --log-level=debug --inputs-debug'
+          tg_command: 'plan -out /github/workspace/terragrunt.tfplan -out=/tmp/plan.out --log-level=debug --inputs-debug'
           tg_comment: 'true'
 
       - name: List Files in Directory
+        working-directory: ${{ github.workspace }}
         run: |
+          pwd
           ls -al
-          ls -al /tmp
 
       - name: Output Plan Logs terragrunt
-        run: cat /tmp/plan.out || echo "Plan logs not found in terragrunt dir."
+        run: cat /github/workspace/terragrunt.tfplan || echo "Plan logs not found in terragrunt dir."
 
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
           name: terragrunt-plan
-          path: /tmp/plan.out
+          path: /github/workspace/terragrunt.tfplan
 
 
   deploy:
@@ -75,4 +76,4 @@ jobs:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
-          tg_command: 'apply plan.out  --log-level=debug --inputs-debug'
+          tg_command: 'apply terragrunt.tfplan  --log-level=debug --inputs-debug'
