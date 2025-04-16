@@ -48,13 +48,13 @@ jobs:
           ls -al
 
       - name: Output Plan Logs terragrunt
-        run: cat /github/workspace/terragrunt.tfplan || echo "Plan logs not found in terragrunt dir."
+        run: cat ${{ github.workspace }}/terragrunt.tfplan || echo "Plan logs not found in terragrunt dir."
 
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
           name: terragrunt-plan
-          path: /github/workspace/terragrunt.tfplan
+          path: ${{ github.workspace }}/terragrunt.tfplan
 
 
   deploy:
