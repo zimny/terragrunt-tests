@@ -38,6 +38,18 @@ jobs:
           tg_dir: ${{ env.working_dir }}
           tg_command: 'plan -out=plan.out'
 
+      - name: List Files in Directory
+        run: ls -al
+
+      - name: Debug Plan Output
+        run: |
+          if [ -f "plan.out" ]; then
+            echo "plan.out exists.";
+          else
+            echo "plan.out does not exist.";
+            exit 1;
+          fi
+
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
