@@ -50,11 +50,18 @@ jobs:
             exit 1;
           fi
 
+      - name: Output Plan Logs
+        run: cat plan.out || echo "Plan logs not found."
+      
+
+      - name: Output Plan Logs terragrunt
+        run: cat terragrunt/plan.out || echo "Plan logs not found in terragrunt dir."
+
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
           name: terragrunt-plan
-          path: plan.out
+          path: terragrunt/plan.out
 
       - name: Post Plan to PR
         uses: actions/github-script@v6
