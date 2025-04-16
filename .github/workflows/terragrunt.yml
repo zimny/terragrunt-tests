@@ -38,7 +38,7 @@ jobs:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
-          tg_command: 'plan -out /github/workspace/terragrunt.tfplan -out=/tmp/plan.out --log-level=debug --inputs-debug'
+          tg_command: 'plan -out /github/workspace/terragrunt.tfplan --log-level=debug --inputs-debug'
           tg_comment: 'true'
 
       - name: List Files in Directory
