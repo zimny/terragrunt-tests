@@ -29,9 +29,6 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@main
 
-      - name: Create Plan Directory
-        run: mkdir -p ${{ github.workspace }}
-
       - name: Generate Plan
         id: terragrunt-plan
         uses: gruntwork-io/terragrunt-action@v2
@@ -39,7 +36,7 @@ jobs:
           tofu_version: ${{ env.tofu_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
-          tg_command: 'plan -out=${{ github.workspace }}/plan.out'
+          tg_command: 'plan -out=plan.out --terragrunt-log-level debug --terragrunt-debug'
           tg_comment: 'true'
 
       - name: List Files in Directory
