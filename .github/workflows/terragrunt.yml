@@ -79,4 +79,4 @@ jobs:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
-          tg_command: 'apply  /home/runner/work/terragrunt-tests/terragrunt-tests/terragrunt.tfplan  --log-level=debug --inputs-debug'
+          tg_command: 'apply  /github/workspace/terragrunt.tfplan  --log-level=debug --inputs-debug'
