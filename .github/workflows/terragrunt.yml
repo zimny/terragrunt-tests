@@ -6,6 +6,8 @@ env:
   tg_version: '0.77.17'
   tf_version: '1.11.4'
   working_dir: 'terragrunt'
+  TG_DOWNLOAD_DIR: '/tmp'
+  TERRAGRUNT_DOWNLOAD: '/tmp'
 
 jobs:
   checks:
@@ -36,11 +38,13 @@ jobs:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
-          tg_command: 'plan -out=/tmp/plan.out --terragrunt-log-level debug --terragrunt-debug'
+          tg_command: 'plan -out=/tmp/plan.out --log-level=debug --inputs-debug'
           tg_comment: 'true'
 
       - name: List Files in Directory
-        run: ls ${{ github.workspace }} -al
+        run: |
+          ls -al
+          ls -al /tmp
 
       - name: Output Plan Logs terragrunt
         run: cat /tmp/plan.out || echo "Plan logs not found in terragrunt dir."
@@ -71,4 +75,4 @@ jobs:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
-          tg_command: 'apply plan.out'
+          tg_command: 'apply plan.out  --log-level=debug --inputs-debug'
