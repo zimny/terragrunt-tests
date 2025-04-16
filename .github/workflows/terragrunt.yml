@@ -36,20 +36,20 @@ jobs:
           tofu_version: ${{ env.tofu_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
-          tg_command: 'plan -out=plan.out --terragrunt-log-level debug --terragrunt-debug'
+          tg_command: 'plan -out=/github/workspace/terragrunt/plan.out --terragrunt-log-level debug --terragrunt-debug'
           tg_comment: 'true'
 
       - name: List Files in Directory
         run: ls ${{ github.workspace }} -al
 
       - name: Output Plan Logs terragrunt
-        run: cat ${{ github.workspace }}/plan.out || echo "Plan logs not found in terragrunt dir."
+        run: cat /github/workspace/terragrunt/plan.out || echo "Plan logs not found in terragrunt dir."
 
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
           name: terragrunt-plan
-          path: ${{ github.workspace }}/plan.out
+          path: /github/workspace/terragrunt/plan.out
 
 
   deploy:
