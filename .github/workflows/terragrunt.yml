@@ -69,6 +69,9 @@ jobs:
         uses: actions/download-artifact@v4.2.1
         with:
           name: terragrunt-plan
+      - name: Debug
+        run: |
+          ls /home/runner/work/terragrunt-tests/terragrunt-tests -al
 
       - name: Deploy
         uses: gruntwork-io/terragrunt-action@v2
