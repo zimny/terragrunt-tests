@@ -3,9 +3,15 @@ on:
   - pull_request
 
 env:
-  tofu_version: '1.8.1'
-  tg_version: '0.67.0'
+  tg_version: '0.77.17'
+  tf_version: '1.11.4'
   working_dir: 'terragrunt'
+  TG_DOWNLOAD_DIR: '/tmp'
+  TERRAGRUNT_DOWNLOAD: '/tmp'
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions:
+  pull-requests: write
 
 jobs:
   checks:
@@ -17,7 +23,7 @@ jobs:
       - name: Check terragrunt HCL
         uses: gruntwork-io/terragrunt-action@v2
         with:
-          tofu_version: ${{ env.tofu_version }}
+          tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
           tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
@@ -29,27 +35,40 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@main
 
-      - name: Plan
+      - name: Generate Plan
+        id: terragrunt-plan
         uses: gruntwork-io/terragrunt-action@v2
         with:
-          tofu_version: ${{ env.tofu_version }}
+          tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
-          tg_command: 'plan'
+          tg_command: 'plan -out /github/workspace/terragrunt.tfplan'
+          tg_comment: 1
+
+      - name: Upload Plan Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: terragrunt-plan
+          path: ${{ github.workspace }}/terragrunt.tfplan
+
 
   deploy:
     runs-on: ubuntu-latest
     needs: [ plan ]
     environment: 'dev'
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: 'Checkout'
         uses: actions/checkout@main
 
+      - name: Download Plan Artifact
+        uses: actions/download-artifact@v4.2.1
+        with:
+          name: terragrunt-plan
+
       - name: Deploy
         uses: gruntwork-io/terragrunt-action@v2
         with:
-          tofu_version: ${{ env.tofu_version }}
+          tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
           tg_dir: ${{ env.working_dir }}
-          tg_command: 'apply'
+          tg_command: 'apply  /github/workspace/terragrunt.tfplan'
